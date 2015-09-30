@@ -169,26 +169,3 @@ def listen():
 
     finally:
         user32.UnregisterHotKey(None, 1)
-
-#{{{  Test functions
-def handle_f9():
-    print("F9 Pressed")
-
-def handle_f8():
-    print("F8 Pressed, exiting now!")
-    return False
-
-def handle_c_f9():
-    print("Control+F9 Pressed")
-
-def test():
-    print("Testing, press F9, Ctrl+F9, and F8 to exit")
-
-    register(handle_f9, 'F9')
-    register(handle_f8, 'F8')
-    register(handle_c_f9, 'F9', ['Ctrl'])
-    listen()
-#}}}
-
-if __name__ == "__main__":
-    test()
