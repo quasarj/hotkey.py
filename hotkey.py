@@ -8,9 +8,9 @@ user32 = ctypes.windll.user32
 
 CALLBACKS = []
 
-def create_key_lookup():
+def create_key_lookup():#{{{
     """Creates Key look up dictionaries, change names as you please"""
-    ID2Key = {   8: 'Back',
+    ID2Key = {
                  9: 'Tab',
                  13: 'Return',
                  20: 'Capital',
@@ -121,16 +121,18 @@ def create_key_lookup():
                  win32con.MOD_ALT: 'Alt',
                  win32con.MOD_SHIFT: 'Shift',
                  win32con.MOD_WIN: 'Win'}
-    
+
     Key2ID = dict(map(lambda x,y: (x,y),ID2Key.values(),ID2Key.keys()))
-    
-    return ID2Key, Key2ID
+
+    return ID2Key, Key2ID#}}}
 
 id_to_key, key_to_id = create_key_lookup()
 
 
-def register_hotkey(callback, key, modifiers=None):
-    """
+def register(callback, key, modifiers=None):
+    """Register a  hotkey
+
+    keys are given as simple names
     modifiers is a list
     """
     global CALLBACKS
@@ -146,10 +148,12 @@ def register_hotkey(callback, key, modifiers=None):
     ret = user32.RegisterHotKey(None, next_id, modifiers_or, key_to_id[key])
     if not ret:
         raise RuntimeError("Could not map hotkey")
-    CALLBACKS.append(callback) 
+    CALLBACKS.append(callback)
 
 
-def hotkey_msg_loop():
+def listen():
+    """Begin the message loop, waiting for hotkeys"""
+
     try:
         msg = wintypes.MSG()
         while user32.GetMessageA(byref(msg), None, 0, 0) != 0:
@@ -180,10 +184,10 @@ def handle_c_f9():
 def test():
     print("Testing, press F9, Ctrl+F9, and F8 to exit")
 
-    register_hotkey(handle_f9, 'F9')
-    register_hotkey(handle_f8, 'F8')
-    register_hotkey(handle_c_f9, 'F9', ['Ctrl'])
-    hotkey_msg_loop()
+    register(handle_f9, 'F9')
+    register(handle_f8, 'F8')
+    register(handle_c_f9, 'F9', ['Ctrl'])
+    listen()
 #}}}
 
 if __name__ == "__main__":
