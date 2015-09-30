@@ -1,1 +1,1 @@
-from .hotkey import register, listen
+from .hotpy import register, listen
